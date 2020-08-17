@@ -1,0 +1,39 @@
+version: '3.4'
+
+services:
+  sqlserver:
+    image: rrvieira/mssql-server:2017 # Dockerfile.mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=ThisShouldBeAStr0ngPassword!
+      - MSSQL_PID=Standard
+      - WAIT_HOSTS=localhost:1433
+      - WAIT_AFTER_HOSTS=5
+    command: sh -c "/wait && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ThisShouldBeAStr0ngPassword! -i /scripts/dbinit.sql & /opt/mssql/bin/sqlservr"
+    volumes:
+      - "./dbinit.sql:/scripts/dbinit.sql"
+
+  somewebapplication:
+    build:
+      context: .
+      dockerfile: SomeWebApplication/Dockerfile
+    command: sh -c "/wait && dotnet SomeWebApplication.dll"
+    depends_on:
+      - sqlserver
+    environment:
+      - WAIT_HOSTS=sqlserver:1433
+      - WAIT_AFTER_HOSTS=5
+
+  somewebapplicationinterfacetests:
+    build:
+      context: ./SomeWebApplicationInterfaceTests
+      dockerfile: ./Dockerfile
+    command: sh -c "/opt/bin/entry_point.sh & /wait && /usr/bin/dotnet test"
+    depends_on:
+      - somewebapplication
+    environment:
+      - WAIT_HOSTS=somewebapplication:80
+      - WAIT_AFTER_HOSTS=5
+      - WAIT_HOSTS_TIMEOUT=60
+    ports:
+      - 5900:5900
