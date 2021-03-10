@@ -10,21 +10,19 @@ namespace SomeWebApplicationInterfaceTests
     {
         protected static IWebDriver WebDriver { get; set; }
 
-        protected string TakeScreenshot(string fileName)
+        protected void TakeScreenshot(string fileName)
         {
-            WebDriver.TakeScreenshot().SaveAsFile($"{Directory.GetCurrentDirectory()}/{fileName}");
-
-            return $"{Directory.GetCurrentDirectory()}/{fileName}";
+            WebDriver.TakeScreenshot().SaveAsFile($"/images/{fileName}");
         }
 
         protected static void SeleniumInitialize()
         {
-            WebDriver = new ChromeDriver(new ChromeOptions() { });            
+            WebDriver = new ChromeDriver(new ChromeOptions() { });
         }
 
         protected static void SeleniumCleanUp()
         {
-            WebDriver.Quit();            
+            WebDriver.Quit();
         }
     }
 }

@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/mssql/server:2017-latest
 
-LABEL VERSION="1.0"
+LABEL VERSION="1.1"
 LABEL AUTHOR="Rodrigo Riccitelli Vieira"
 LABEL Purpose="Custom SQL 2017 Image with Wait Utility"
 

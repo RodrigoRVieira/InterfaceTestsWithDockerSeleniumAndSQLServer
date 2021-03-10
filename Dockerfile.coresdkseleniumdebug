@@ -1,6 +1,6 @@
 FROM selenium/standalone-chrome-debug:3.141.59
 
-LABEL VERSION="1.0"
+LABEL VERSION="1.1"
 LABEL AUTHOR="Rodrigo Riccitelli Vieira"
 LABEL Purpose="Custom Image with Selenium Chrome Debug v3.141.59 and .NET Core SDK 3.1"
 

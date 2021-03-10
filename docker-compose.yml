@@ -13,7 +13,7 @@ services:
     volumes:
       - "./dbinit.sql:/scripts/dbinit.sql"
 
-  somewebapplication:
+  webapplication:
     build:
       context: .
       dockerfile: SomeWebApplication/Dockerfile
@@ -22,18 +22,20 @@ services:
       - sqlserver
     environment:
       - WAIT_HOSTS=sqlserver:1433
-      - WAIT_AFTER_HOSTS=5
+      - WAIT_AFTER_HOSTS=10
 
-  somewebapplicationinterfacetests:
+  interfacetests:
     build:
       context: ./SomeWebApplicationInterfaceTests
       dockerfile: ./Dockerfile
     command: sh -c "/opt/bin/entry_point.sh & /wait && /usr/bin/dotnet test"
     depends_on:
-      - somewebapplication
+      - webapplication
     environment:
-      - WAIT_HOSTS=somewebapplication:80
+      - WAIT_HOSTS=webapplication:80
       - WAIT_AFTER_HOSTS=5
       - WAIT_HOSTS_TIMEOUT=60
     ports:
       - 5900:5900
+    volumes:
+      - "/home/rrvieira/MeetUpDockerSP/Demo/images:/images"
